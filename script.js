@@ -1,39 +1,25 @@
 const video = document.getElementById('video');
         const resultDiv = document.getElementById('result');
 
-        // Check for available video devices
-        navigator.mediaDevices.enumerateDevices()
-            .then(devices => {
-                const backCamera = devices.find(device => device.kind === 'videoinput' && device.label.toLowerCase().includes('environment'));
-                console.log('Available devices:', devices);
-                
-                // If a back camera is found, use it
-                if (backCamera) {
-                    startCamera(backCamera.deviceId);
-                } else {
-                    console.error('No back camera found. Using default camera.');
-                    startCamera(); // Use default camera
-                }
-            })
-            .catch(err => {
-                console.error("Error accessing media devices: ", err);
-            });
-
-        function startCamera(deviceId) {
+        // Function to start the camera
+        function startCamera() {
             const constraints = {
                 video: {
-                    facingMode: deviceId ? { exact: deviceId } : 'user' // 'user' for front camera
+                    facingMode: { exact: "environment" } // Request the back camera
                 }
             };
 
             navigator.mediaDevices.getUserMedia(constraints)
-                .then(stream => {
+                .then((stream) => {
                     video.srcObject = stream;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error("Error accessing the camera: ", err);
                 });
         }
+
+        // Start the camera when the page loads
+        startCamera();
 
         // Function to capture image and scan QR code
         document.getElementById('scan-button').addEventListener('click', () => {
