@@ -1,14 +1,18 @@
 const video = document.getElementById('video');
 const resultDiv = document.getElementById('result');
 
-// Prompt for camera access
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then((stream) => {
-        video.srcObject = stream;
-    })
-    .catch((err) => {
-        console.error("Error accessing the camera: ", err);
-    });
+// Prompt for camera access (specifying the back camera if available)
+navigator.mediaDevices.getUserMedia({
+    video: {
+        facingMode: { exact: "environment" } // Request the back camera
+    }
+})
+.then((stream) => {
+    video.srcObject = stream;
+})
+.catch((err) => {
+    console.error("Error accessing the camera: ", err);
+});
 
 // Function to capture image and scan QR code
 document.getElementById('scan-button').addEventListener('click', () => {
